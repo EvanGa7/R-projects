@@ -1,0 +1,111 @@
+---
+title: "Project RStudio"
+output: pdf_document
+date: "2023-04-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+```{r}
+# create data frame
+df1 <- data.frame(Technical_8GB_16GB_32GB = c(101, 101, 1),
+                  Non_technical_8GB_16GB_32GB = c(10, 40, 10))
+
+# perform t-test
+t.test(df1$Technical_8GB_16GB_32GB, df1$Non_technical_8GB_16GB_32GB, var.equal = TRUE)
+```
+
+```{r}
+
+# create data frame
+df2 <- data.frame(Technical_256GB_512GB_1000GB_2000GB = c(17, 75, 24, 13),
+                  Non_technical_256GB_512GB_1000GB_2000GB = c(7, 7, 15, 5))
+# perform t-test
+t.test(df2$Technical_256GB_512GB_1000GB_2000GB, df2$Non_technical_256GB_512GB_1000GB_2000GB, var.equal = TRUE)
+
+```
+
+```{r}
+# Create a data frame for the contingency table
+df <- data.frame(Category = c(rep("Creative Arts", 2), rep("Non-Technical Majors", 2)),
+                 Technology = c(7, 0, 46, 70))
+
+# Perform a two-sample t-test
+t.test(x = df[df$Category == "Creative Arts", "Technology"],
+       y = df[df$Category == "Non-Technical Majors", "Technology"],
+       var.equal = TRUE)
+```
+
+```{r}
+
+df <- data.frame(
+  Technology = c("Laptops", "Operating Systems", "RAM", "Storage", "Desktop", "Tablet"), 
+  STEM = c(123, 60, 79, 79, 79, 79), 
+  Performing_Arts = c(10, 6, 11, 10, 10, 10), 
+  Business = c(15, 15, 16, 15, 15, 15), 
+  Science = c(40, 52, 40, 40, 40, 40), 
+  Technology_owned = c(23, 24, 24, 22, 24, 8), 
+  Art = c(3, 3, 4, 3, 3, 3), 
+  Marketing_owned = c(11, 11, 11, 10, 11, 10), 
+  Average_Salary = c(60000, 55000, 70000, 65000, 60000, 55000)
+)
+
+library(ggplot2)
+ggplot(df, aes(x = STEM, y = Average_Salary)) +
+  geom_point()
+
+lm_model <- lm(Average_Salary ~ STEM, data = df)
+summary(lm_model)
+
+ggplot(df, aes(x = STEM, y = Average_Salary)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+
+```
+
+```{r}
+# create the data frame with the counts
+df <- data.frame(
+  Applications = c("Corel Painter", "Avid Pro Tools", "Final Cut Pro", "Adobe Photoshop", "MatLab", "VSCode", "IntelliJ"),
+  Design_related = c(1, 1, 2, 2, 12, 0, 0),
+  Other_majors = c(0, 0, 1, 0, 4, 7, 6)
+)
+
+# conduct the two-sample t-test
+t.test(df$Design_related, df$Other_majors)
+```
+```{r}
+data <- data.frame(
+  Major = c("STEM", "Performing Arts", "Business", "Science", "Technology", "Art", "Humanities"),
+  Count = c(40, 8, 15, 39, 5, 7, 9)
+)
+
+# add counts of zero for the missing majors
+business <- subset(data, Major == "Business")
+other <- subset(data, Major != "Business" & Major != "All")
+
+t.test(business$Count, other$Count, alternative = "greater", var.equal = TRUE)
+```
